@@ -5,7 +5,7 @@ import { getAllPostIds, getPostData } from "../../lib/posts";
 type Path = ReturnType<typeof getAllPostIds>[number];
 
 export const getStaticProps = async ({ params }: Path) => {
-  const postData = getPostData(params.id);
+  const postData = await getPostData(params.id);
 
   return {
     props: {
@@ -23,7 +23,7 @@ export const getStaticPaths = async () => {
   };
 };
 
-type PostProps = { postData: ReturnType<typeof getPostData> };
+type PostProps = { postData: Awaited<ReturnType<typeof getPostData>> };
 
 const Post = ({ postData }: PostProps) => (
   <Layout>
@@ -32,6 +32,7 @@ const Post = ({ postData }: PostProps) => (
     {postData.id}
     <br />
     {postData.date}
+    <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
   </Layout>
 );
 
